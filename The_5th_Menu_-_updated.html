@@ -1,0 +1,732 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>@ The 5th Menu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Jost:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+<style>
+  /* ------------------------------------------------------------
+     @ The 5th - menu with doors
+     Layout idea: one tall menu card, two blue doors laid over it.
+     Opening the doors swings each half away to show the menu.
+     ------------------------------------------------------------ */
+
+  :root {
+    /* page */
+    --ground-top: #E9EFF3;
+    --ground-bottom: #D5DFE6;
+    --ink: #0E2A47;
+
+    /* menu + doors */
+    --navy: #0F2C4C;
+    --door: #0C2744;
+    --door-glow: #1A5688;
+    --gold: #C9A862;
+    --cream: #F3EEE3;
+    --mist: #D9E2EC;
+    --haze: #AFC0D2;
+
+    --font-script: "Allura", cursive;
+    --font-door-script: "Pinyon Script", cursive;
+    --font-title: "Cinzel", Georgia, serif;
+    --font-body: "Cormorant Garamond", Georgia, serif;
+    --font-label: "Jost", system-ui, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground-top: #0B1826;
+      --ground-bottom: #07111C;
+      --ink: #D9E2EC;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground-top: #0B1826;
+    --ground-bottom: #07111C;
+    --ink: #D9E2EC;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--ground-top), var(--ground-bottom));
+    color: var(--ink);
+    font-family: var(--font-body);
+    padding-block: 28px 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  /* ---------- the book (menu + doors) ---------- */
+
+  .book {
+    position: relative;
+    width: min(100%, 600px);
+    container-type: inline-size;   /* lets everything inside size itself with cqw */
+    perspective: 2800px;
+  }
+
+  .menu {
+    position: relative;
+    background: var(--navy);
+    color: var(--cream);
+    padding: 9cqw 10cqw 8cqw;
+    text-align: center;
+    box-shadow: 0 24px 56px rgba(10, 30, 50, 0.35);
+    transform: scale(0.94);
+    opacity: 0.6;
+    transition: transform 1.6s cubic-bezier(0.55, 0.05, 0.2, 1), opacity 1.2s ease;
+  }
+
+  .book.is-open .menu {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  /* double gold frame */
+  .menu::before,
+  .menu::after {
+    content: "";
+    position: absolute;
+    border: 1px solid var(--gold);
+    pointer-events: none;
+  }
+  .menu::before { inset: 4.6cqw; }
+  .menu::after  { inset: 6.3cqw; border-width: 0.5px; }
+
+  .corner {
+    position: absolute;
+    width: 3.6cqw;
+    height: 3.6cqw;
+    background: var(--navy);
+    z-index: 1;
+  }
+  .corner::before,
+  .corner::after {
+    content: "";
+    position: absolute;
+    inset: 22%;
+    border: 1px solid var(--gold);
+  }
+  .corner::after { transform: rotate(45deg); }
+  .corner--tl { top: 2.8cqw;    left: 2.8cqw; }
+  .corner--tr { top: 2.8cqw;    right: 2.8cqw; }
+  .corner--bl { bottom: 2.8cqw; left: 2.8cqw; }
+  .corner--br { bottom: 2.8cqw; right: 2.8cqw; }
+
+  /* ---------- menu header ---------- */
+
+  .menu__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .emblem {
+    width: 10.5cqw;
+    min-width: 48px;
+    height: auto;
+  }
+
+  .menu__logo {
+    margin: 0.6cqw 0 0;
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: 13cqw;
+    line-height: 1.15;
+    color: var(--gold);
+  }
+
+  .menu__label {
+    margin: 1.5cqw 0 0;
+    font-family: var(--font-title);
+    font-size: max(11px, 2.2cqw);
+    letter-spacing: 0.7em;
+    text-indent: 0.7em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- courses and dishes ---------- */
+
+  .course {
+    margin-top: 4.5cqw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .course__door {
+    width: 2.7cqw;
+    min-width: 14px;
+    height: auto;
+  }
+
+  .course__name {
+    margin: 2cqw 0 0;
+    font-family: var(--font-label);
+    font-weight: 500;
+    font-size: max(10px, 1.7cqw);
+    letter-spacing: 0.45em;
+    text-indent: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .dish {
+    margin-top: 2.6cqw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dish__name {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 500;
+    font-size: max(15px, 3.7cqw);
+    letter-spacing: 0.12em;
+    text-indent: 0.12em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .dish__text {
+    margin: 1.8cqw 0 0;
+    font-style: italic;
+    font-size: max(11.5px, 2.75cqw);
+    line-height: 1.4;
+    color: var(--mist);
+    text-wrap: balance;
+  }
+
+  /* price, sits right under the description */
+  .dish__price {
+    margin: 1.6cqw 0 0;
+    font-family: var(--font-title);
+    font-weight: 500;
+    font-size: max(13px, 3cqw);
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  /* allergen icons */
+  .allergens {
+    list-style: none;
+    margin: 2.6cqw 0 0;
+    padding: 0;
+    display: flex;
+    gap: 1.8cqw;
+    color: var(--gold);
+  }
+
+  .icon {
+    display: block;
+    width: max(24px, 4.4cqw);
+    height: max(24px, 4.4cqw);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* gold line - diamond - gold line */
+  .divider {
+    margin-top: 3cqw;
+    display: flex;
+    align-items: center;
+    justify-content: center;   /* keeps the line-diamond-line centred, also between courses */
+    gap: 2.2cqw;
+  }
+  .divider::before,
+  .divider::after {
+    content: "";
+    width: 11cqw;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+  .divider span {
+    width: 1.5cqw;
+    min-width: 7px;
+    aspect-ratio: 1;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* ---------- footer ---------- */
+
+  .menu__foot {
+    margin-top: 6cqw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2cqw;
+  }
+
+  .legend__title {
+    margin: 0;
+    font-family: var(--font-label);
+    font-weight: 500;
+    font-size: max(9px, 1.5cqw);
+    letter-spacing: 0.35em;
+    text-indent: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5cqw 3.2cqw;
+    font-family: var(--font-label);
+    font-size: max(11px, 1.8cqw);
+    letter-spacing: 0.05em;
+    color: var(--haze);
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 1.1cqw;
+  }
+  .legend .icon {
+    width: max(20px, 3.4cqw);
+    height: max(20px, 3.4cqw);
+    color: var(--gold);
+  }
+
+  .menu__wish {
+    margin: 1.5cqw 0 0;
+    font-style: italic;
+    font-size: max(10px, 2.6cqw);
+    color: var(--mist);
+    white-space: nowrap;   /* keep the whole sentence on one line */
+  }
+
+  .menu__credit {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: max(10px, 1.8cqw);
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+    color: var(--gold);
+  }
+
+  .lattice {
+    margin-top: 4cqw;
+    width: 80cqw;
+    max-width: 100%;
+    height: 10px;
+  }
+
+  /* ---------- the doors ---------- */
+
+  .door {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    overflow: hidden;
+    background: var(--door);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: 0 24px 50px rgba(10, 30, 50, 0.35);
+    transition: transform 1.6s cubic-bezier(0.55, 0.05, 0.2, 1);
+  }
+
+  .door--left  { left: 0;  transform-origin: left center; }
+  .door--right { right: 0; transform-origin: right center; }
+
+  .book.is-open .door--left  { transform: rotateY(-112deg); }
+  .book.is-open .door--right { transform: rotateY(112deg); }
+
+  /* each door shows one half of the same full-width picture */
+  .door__face {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 200%;
+    background: radial-gradient(ellipse at 50% 46%, rgba(27, 92, 147, 0.85), rgba(12, 39, 68, 0) 62%);
+  }
+  .door--left  .door__face { left: 0; }
+  .door--right .door__face { left: -100%; }
+
+  .door__face::before,
+  .door__face::after {
+    content: "";
+    position: absolute;
+    border: 1px solid var(--gold);
+  }
+  .door__face::before { inset: 4cqw; }
+  .door__face::after  { inset: 5.3cqw; border-width: 0.5px; opacity: 0.7; }
+
+  .door__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .door__kicker,
+  .door__logo,
+  .door__label {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    color: var(--gold);
+  }
+
+  .door__kicker {
+    top: 9cqw;
+    font-family: var(--font-label);
+    font-size: max(8px, 1.5cqw);
+    letter-spacing: 0.55em;
+    text-indent: 0.55em;
+  }
+
+  .door__logo {
+    bottom: 11cqw;
+    font-family: var(--font-door-script);
+    font-weight: 400;
+    font-size: 9.7cqw;
+    line-height: 1;
+    color: #F4F0E6;
+  }
+
+  .door__label {
+    bottom: 7cqw;
+    font-family: var(--font-label);
+    font-weight: 500;
+    font-size: max(9px, 1.7cqw);
+    letter-spacing: 0.6em;
+    text-indent: 0.6em;
+  }
+
+  /* soft shadow where the two doors meet */
+  .door--left::after,
+  .door--right::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 7.5cqw;
+  }
+  .door--left::after  { right: 0; background: linear-gradient(to left,  rgba(4, 14, 28, 0.35), rgba(4, 14, 28, 0)); }
+  .door--right::after { left: 0;  background: linear-gradient(to right, rgba(4, 14, 28, 0.35), rgba(4, 14, 28, 0)); }
+
+  /* invisible button over the closed doors, so a tap on them opens the menu */
+  .latch {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    transform: translateZ(4px);
+  }
+  .book.is-open .latch { pointer-events: none; }
+
+  /* ---------- toggle button ---------- */
+
+  .toggle {
+    min-height: 44px;
+    padding: 0 28px;
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-family: var(--font-label);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+    cursor: pointer;
+  }
+  .toggle:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+
+  .latch:focus-visible,
+  .toggle:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu, .door { transition-duration: 0.01s; }
+  }
+</style>
+
+<!-- Allergen icons, drawn once and reused with <use> -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-dairy" viewBox="0 0 26 26">
+    <circle cx="13" cy="13" r="11"/>
+    <path d="M11 6 L15 6 L15 9 L17.5 12 L17.5 19.5 L8.5 19.5 L8.5 12 L11 9 Z"/>
+    <path d="M8.5 14 H17.5"/>
+  </symbol>
+  <symbol id="i-gluten" viewBox="0 0 26 26">
+    <circle cx="13" cy="13" r="11"/>
+    <path d="M13 20 V6"/>
+    <path d="M13 9 C15 6 17.5 5.5 18 6 C17.5 9 15 9.5 13 9 M13 9 C11 6 8.5 5.5 8 6 C8.5 9 11 9.5 13 9
+             M13 13 C15 10 17.5 9.5 18 10 C17.5 13 15 13.5 13 13 M13 13 C11 10 8.5 9.5 8 10 C8.5 13 11 13.5 13 13
+             M13 17 C15 14 17.5 13.5 18 14 C17.5 17 15 17.5 13 17 M13 17 C11 14 8.5 13.5 8 14 C8.5 17 11 17.5 13 17"/>
+  </symbol>
+  <symbol id="i-fish" viewBox="0 0 26 26">
+    <circle cx="13" cy="13" r="11"/>
+    <ellipse cx="11" cy="13" rx="5" ry="3.8"/>
+    <path d="M16 13 L20.5 9 L20.5 17 Z"/>
+    <circle cx="8.8" cy="12" r="0.7" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-egg" viewBox="0 0 26 26">
+    <circle cx="13" cy="13" r="11"/>
+    <ellipse cx="13" cy="12.75" rx="4" ry="6.25"/>
+  </symbol>
+  <symbol id="i-nuts" viewBox="0 0 26 26">
+    <circle cx="13" cy="13" r="11"/>
+    <path d="M13 6 C19 11 18 18 13 20 C8 18 7 11 13 6 Z"/>
+    <path d="M13 9 V17"/>
+  </symbol>
+</svg>
+
+<main class="page">
+
+  <div class="book" id="book">
+
+    <!-- THE MENU -->
+    <article class="menu" aria-labelledby="menu-title">
+      <span class="corner corner--tl"></span>
+      <span class="corner corner--tr"></span>
+      <span class="corner corner--bl"></span>
+      <span class="corner corner--br"></span>
+
+      <header class="menu__head">
+        <svg class="emblem" viewBox="0 0 84 84" fill="none" stroke="#C9A862" aria-hidden="true">
+          <circle cx="42" cy="42" r="40" stroke-width="0.8"/>
+          <rect x="18" y="18" width="48" height="48" stroke-width="0.9"/>
+          <rect x="18" y="18" width="48" height="48" stroke-width="0.9" transform="rotate(45 42 42)"/>
+          <rect x="30" y="30" width="24" height="24" stroke-width="0.7"/>
+          <rect x="30" y="30" width="24" height="24" stroke-width="0.7" transform="rotate(45 42 42)"/>
+          <path d="M42 4 V30 M42 54 V80 M4 42 H30 M54 42 H80" stroke-width="0.6"/>
+          <circle cx="42" cy="42" r="3.5" fill="#C9A862" stroke="none"/>
+        </svg>
+        <h1 class="menu__logo" id="menu-title">@ The 5th</h1>
+        <p class="menu__label">Menu</p>
+      </header>
+
+      <!-- Starters -->
+      <section class="course">
+        <svg class="course__door" viewBox="0 0 16 22" fill="none" stroke="#C9A862" stroke-width="0.9" aria-hidden="true"><path d="M1 21 V9 C1 4 6 3 8 0 C10 3 15 4 15 9 V21 Z"/></svg>
+        <h2 class="course__name">Starters</h2>
+
+        <article class="dish">
+          <h3 class="dish__name">Moroccan Khizou</h3>
+          <p class="dish__text">Textures of carrot, fresh cumin cheese,<br>argan oil and golden almonds.</p>
+          <p class="dish__price">60</p>
+          <ul class="allergens">
+            <li><svg class="icon" role="img" aria-label="Contains dairy"><use href="#i-dairy"/></svg></li>
+            <li><svg class="icon" role="img" aria-label="Contains nuts"><use href="#i-nuts"/></svg></li>
+          </ul>
+        </article>
+
+        <div class="divider" aria-hidden="true"><span></span></div>
+
+        <article class="dish">
+          <h3 class="dish__name">Moroccan Briouates</h3>
+          <p class="dish__text">Crispy pastry parcels filled with cheese &amp; spinach,<br>spiced beef and seafood, served with a tomato-harissa condiment.</p>
+          <p class="dish__price">60</p>
+          <ul class="allergens">
+            <li><svg class="icon" role="img" aria-label="Contains dairy"><use href="#i-dairy"/></svg></li>
+            <li><svg class="icon" role="img" aria-label="Contains gluten"><use href="#i-gluten"/></svg></li>
+            <li><svg class="icon" role="img" aria-label="Contains fish"><use href="#i-fish"/></svg></li>
+          </ul>
+        </article>
+      </section>
+
+      <div class="divider" aria-hidden="true"><span></span></div>
+
+      <!-- Main courses -->
+      <section class="course">
+        <svg class="course__door" viewBox="0 0 16 22" fill="none" stroke="#C9A862" stroke-width="0.9" aria-hidden="true"><path d="M1 21 V9 C1 4 6 3 8 0 C10 3 15 4 15 9 V21 Z"/></svg>
+        <h2 class="course__name">Main Courses</h2>
+
+        <article class="dish">
+          <h3 class="dish__name">Fish Tagine</h3>
+          <p class="dish__text">Slow cooked style, chermoula-marinated fish,<br>saffron potatoes, tomatoes &amp; bell peppers.</p>
+          <p class="dish__price">170</p>
+          <ul class="allergens">
+            <li><svg class="icon" role="img" aria-label="Contains fish"><use href="#i-fish"/></svg></li>
+          </ul>
+        </article>
+
+        <div class="divider" aria-hidden="true"><span></span></div>
+
+        <article class="dish">
+          <h3 class="dish__name">Kebab Maghdour</h3>
+          <p class="dish__text">Sautéed beef with onion, cinnamon and aromatic herbs,<br>topped with a fried quail egg and served in a traditional tagine.</p>
+          <p class="dish__price">130</p>
+          <ul class="allergens">
+            <li><svg class="icon" role="img" aria-label="Contains egg"><use href="#i-egg"/></svg></li>
+          </ul>
+        </article>
+      </section>
+
+      <div class="divider" aria-hidden="true"><span></span></div>
+
+      <!-- Desserts -->
+      <section class="course">
+        <svg class="course__door" viewBox="0 0 16 22" fill="none" stroke="#C9A862" stroke-width="0.9" aria-hidden="true"><path d="M1 21 V9 C1 4 6 3 8 0 C10 3 15 4 15 9 V21 Z"/></svg>
+        <h2 class="course__name">Desserts</h2>
+
+        <article class="dish">
+          <h3 class="dish__name">Brise du Nord</h3>
+          <p class="dish__text">Orange blossom crème brûlée, orange blossom ice cream.</p>
+          <p class="dish__price">40</p>
+          <ul class="allergens">
+            <li><svg class="icon" role="img" aria-label="Contains dairy"><use href="#i-dairy"/></svg></li>
+            <li><svg class="icon" role="img" aria-label="Contains egg"><use href="#i-egg"/></svg></li>
+          </ul>
+        </article>
+
+        <div class="divider" aria-hidden="true"><span></span></div>
+
+        <article class="dish">
+          <h3 class="dish__name">Sticky Toffee Pudding</h3>
+          <p class="dish__text">A warm Mejhool date sponge,<br>toffee sauce and Bourbon vanilla ice cream.</p>
+          <p class="dish__price">40</p>
+          <ul class="allergens">
+            <li><svg class="icon" role="img" aria-label="Contains dairy"><use href="#i-dairy"/></svg></li>
+            <li><svg class="icon" role="img" aria-label="Contains egg"><use href="#i-egg"/></svg></li>
+            <li><svg class="icon" role="img" aria-label="Contains gluten"><use href="#i-gluten"/></svg></li>
+          </ul>
+        </article>
+      </section>
+
+      <footer class="menu__foot">
+        <h2 class="legend__title">Allergen information</h2>
+        <ul class="legend">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-fish"/></svg>Fish</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-dairy"/></svg>Dairy</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-egg"/></svg>Egg</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-nuts"/></svg>Nuts</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-gluten"/></svg>Gluten</li>
+        </ul>
+        <p class="menu__wish">Our learners and teams wish you a delightful fun-dining experience!</p>
+        <p class="menu__credit">UM6P &nbsp;·&nbsp; SHBM</p>
+        <svg class="lattice" aria-hidden="true">
+          <defs>
+            <pattern id="lattice-tile" width="16" height="10" patternUnits="userSpaceOnUse">
+              <path d="M0 5 L8 0 L16 5 L8 10 Z" fill="none" stroke="#C9A862" stroke-width="0.6"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="10" fill="url(#lattice-tile)"/>
+        </svg>
+      </footer>
+    </article>
+
+    <!-- THE DOORS: same picture on both halves, each half shifted so they line up -->
+    <div class="door door--left">
+      <div class="door__face">
+        <svg class="door__art" viewBox="110 120 380 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M150 640 V298 C150 218 222 190 300 140 C378 190 450 218 450 298 V640 Z" fill="#1A5688" stroke="#C9A96A" stroke-width="1.2"/>
+          <path d="M162 640 V300 C162 228 228 202 300 158 C372 202 438 228 438 300 V640" fill="none" stroke="#C9A96A" stroke-width="0.6" opacity="0.8"/>
+          <path d="M300 158 V640" stroke="#C9A96A" stroke-width="1"/>
+          <rect x="186" y="330" width="86" height="270" fill="none" stroke="#C9A96A" stroke-width="0.5" opacity="0.6"/>
+          <rect x="328" y="330" width="86" height="270" fill="none" stroke="#C9A96A" stroke-width="0.5" opacity="0.6"/>
+          <g fill="#C9A96A">
+            <circle cx="204" cy="350" r="3"/><circle cx="254" cy="350" r="3"/>
+            <circle cx="204" cy="400" r="3"/><circle cx="254" cy="400" r="3"/>
+            <circle cx="204" cy="450" r="3"/><circle cx="254" cy="450" r="3"/>
+            <circle cx="204" cy="500" r="3"/><circle cx="254" cy="500" r="3"/>
+            <circle cx="204" cy="550" r="3"/><circle cx="254" cy="550" r="3"/>
+            <circle cx="346" cy="350" r="3"/><circle cx="396" cy="350" r="3"/>
+            <circle cx="346" cy="400" r="3"/><circle cx="396" cy="400" r="3"/>
+            <circle cx="346" cy="450" r="3"/><circle cx="396" cy="450" r="3"/>
+            <circle cx="346" cy="500" r="3"/><circle cx="396" cy="500" r="3"/>
+            <circle cx="346" cy="550" r="3"/><circle cx="396" cy="550" r="3"/>
+            <circle cx="283" cy="260" r="3"/><circle cx="317" cy="260" r="3"/>
+            <circle cx="283" cy="461" r="2.5"/><circle cx="317" cy="461" r="2.5"/>
+          </g>
+          <circle cx="283" cy="472" r="11" fill="none" stroke="#C9A96A" stroke-width="1.4"/>
+          <circle cx="317" cy="472" r="11" fill="none" stroke="#C9A96A" stroke-width="1.4"/>
+          <rect x="130" y="640" width="340" height="6" fill="#C9A96A" opacity="0.9"/>
+          <rect x="118" y="646" width="364" height="6" fill="#C9A96A" opacity="0.5"/>
+        </svg>
+        <p class="door__kicker">INSPIRED BY CHEFCHAOUEN</p>
+        <p class="door__logo">@ The 5th</p>
+        <p class="door__label">MENU</p>
+      </div>
+    </div>
+
+    <div class="door door--right">
+      <div class="door__face">
+        <svg class="door__art" viewBox="110 120 380 540" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M150 640 V298 C150 218 222 190 300 140 C378 190 450 218 450 298 V640 Z" fill="#1A5688" stroke="#C9A96A" stroke-width="1.2"/>
+          <path d="M162 640 V300 C162 228 228 202 300 158 C372 202 438 228 438 300 V640" fill="none" stroke="#C9A96A" stroke-width="0.6" opacity="0.8"/>
+          <path d="M300 158 V640" stroke="#C9A96A" stroke-width="1"/>
+          <rect x="186" y="330" width="86" height="270" fill="none" stroke="#C9A96A" stroke-width="0.5" opacity="0.6"/>
+          <rect x="328" y="330" width="86" height="270" fill="none" stroke="#C9A96A" stroke-width="0.5" opacity="0.6"/>
+          <g fill="#C9A96A">
+            <circle cx="204" cy="350" r="3"/><circle cx="254" cy="350" r="3"/>
+            <circle cx="204" cy="400" r="3"/><circle cx="254" cy="400" r="3"/>
+            <circle cx="204" cy="450" r="3"/><circle cx="254" cy="450" r="3"/>
+            <circle cx="204" cy="500" r="3"/><circle cx="254" cy="500" r="3"/>
+            <circle cx="204" cy="550" r="3"/><circle cx="254" cy="550" r="3"/>
+            <circle cx="346" cy="350" r="3"/><circle cx="396" cy="350" r="3"/>
+            <circle cx="346" cy="400" r="3"/><circle cx="396" cy="400" r="3"/>
+            <circle cx="346" cy="450" r="3"/><circle cx="396" cy="450" r="3"/>
+            <circle cx="346" cy="500" r="3"/><circle cx="396" cy="500" r="3"/>
+            <circle cx="346" cy="550" r="3"/><circle cx="396" cy="550" r="3"/>
+            <circle cx="283" cy="260" r="3"/><circle cx="317" cy="260" r="3"/>
+            <circle cx="283" cy="461" r="2.5"/><circle cx="317" cy="461" r="2.5"/>
+          </g>
+          <circle cx="283" cy="472" r="11" fill="none" stroke="#C9A96A" stroke-width="1.4"/>
+          <circle cx="317" cy="472" r="11" fill="none" stroke="#C9A96A" stroke-width="1.4"/>
+          <rect x="130" y="640" width="340" height="6" fill="#C9A96A" opacity="0.9"/>
+          <rect x="118" y="646" width="364" height="6" fill="#C9A96A" opacity="0.5"/>
+        </svg>
+        <p class="door__kicker">INSPIRED BY CHEFCHAOUEN</p>
+        <p class="door__logo">@ The 5th</p>
+        <p class="door__label">MENU</p>
+      </div>
+    </div>
+
+    <button type="button" class="latch" id="latch" aria-label="Open the doors to the menu"></button>
+  </div>
+
+  <button type="button" class="toggle" id="toggle" aria-controls="book" aria-expanded="false">OPEN THE DOORS</button>
+
+</main>
+
+<script>
+  // Opens and closes the doors. The state lives in one class on .book.
+  var book = document.getElementById('book');
+  var toggle = document.getElementById('toggle');
+  var latch = document.getElementById('latch');
+
+  function flip() {
+    var open = book.classList.toggle('is-open');
+    toggle.textContent = open ? 'CLOSE THE DOORS' : 'OPEN THE DOORS';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  toggle.addEventListener('click', flip);
+  latch.addEventListener('click', flip);
+</script>
+
+</body></html>
