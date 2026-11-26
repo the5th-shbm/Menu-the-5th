@@ -471,6 +471,12 @@
   @media (prefers-reduced-motion: reduce) {
     .menu, .door { transition-duration: 0.01s; }
   }
+  /* fit to phone screens */
+  html, body { overflow-x: hidden; overflow-x: clip; }
+  .book:not(.is-open) { height: min(calc(100vh - 140px), 150vw, 934px); overflow: hidden; }
+  @supports (height: 100svh) { .book:not(.is-open) { height: min(calc(100svh - 140px), 150vw, 934px); } }
+  @media (max-width: 380px) { .menu__wish { white-space: normal; } }
+  .door__art { top: 13cqw; height: calc(100% - 34cqw); }
 </style>
 
 <!-- Allergen icons, drawn once and reused with <use> -->
